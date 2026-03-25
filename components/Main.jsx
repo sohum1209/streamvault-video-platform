@@ -1,10 +1,11 @@
 'use client'
 
-import { fetchPopular } from "@/app/api/movies/route";
+// import { fetchPopular } from "@/app/api/movies/route";
+import { useGetPopularMoviesQuery } from "@/services/movieApi";
 import Image from "next/image";
 import { UserAuth } from "@/context/AuthContext";
 import { usePathname, useRouter } from "next/navigation";
-import { useEffect, useState } from "react";
+import { useMemo } from "react";
 import { useSaveMovie } from "./hook/useSavedMovie";
 import Link from "next/link";
 
@@ -24,25 +25,15 @@ function Main() {
   const pathname = usePathname();
   const { isSaved, toggleSaveMovie } = useSaveMovie(user);
 
-  const [movie, setMovie] = useState(null);
+  const { data, isLoading } = useGetPopularMoviesQuery();
 
-  useEffect(() => {
-    async function fetchMovie() {
-      try {
-        const movieData = await fetchPopular();
-        const movies = movieData?.results || [];
-        if (movies.length) {
-          const randomMovie =
-            movies[Math.floor(Math.random() * movies.length)];
-          setMovie(randomMovie);
-        }
-      } catch (error) {
-        console.log("Error in fetching movie: ", error);
-      }
-    }
+  const movie = useMemo(() => {
+    if (!data?.results?.length) return null;
 
-    fetchMovie();
-  }, []);
+    return data.results[
+      Math.floor(Math.random() * data.results.length)
+    ];
+  }, [data]);
 
   const handlePlay = () => {
     if (!user) {

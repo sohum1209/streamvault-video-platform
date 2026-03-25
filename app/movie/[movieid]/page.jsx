@@ -14,7 +14,6 @@ import {
     Film,
     LoaderIcon,
 } from "lucide-react";
-import { fetchMovieDetails, fetchMovieTrailer } from "../../api/movies/route"
 import { useParams, usePathname, useRouter } from "next/navigation"
 import { motion } from "framer-motion";
 import Image from "next/image";
