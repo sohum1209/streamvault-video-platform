@@ -1,9 +1,18 @@
-import VideoPlayer from "@/components/VideoPlayer";
-import { fetchMovieDetails } from "@/app/api/movies/route";
-export default async function WatchPage({ params }) {
-    const { movieid } = await params;
+'use client'
 
-    const movie = await fetchMovieDetails(movieid);
+import VideoPlayer from "@/components/VideoPlayer";
+import { LoaderIcon } from "lucide-react";
+import { useGetMovieDetailsQuery } from "@/services/movieApi";
+import { useParams } from "next/navigation";
+export default function WatchPage() {
+    const { movieid } = useParams();
+
+    const { data:movie, isLoading } = useGetMovieDetailsQuery(movieid);
+
+    if (isLoading) return <div className="flex flex-col items-center justify-center h-screen gap-2">
+        <LoaderIcon className="animate-spin w-18 h-18 text-blue-500" />
+        <p className="text-gray-500 text-sm">Loading movie details...</p>
+    </div>
 
     if (!movie) {
         return <div className="text-white">Movie not found 😢</div>;
