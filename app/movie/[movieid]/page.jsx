@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useEffect } from "react";
+import { useState, useEffect, useMemo } from "react";
 import {
     Play,
     PlayCircle,
@@ -26,47 +26,7 @@ import {
 import Link from "next/link";
 import { UserAuth } from "@/context/AuthContext";
 import { useSaveMovie } from "@/components/hook/useSavedMovie"
-
-
-
-// const movie = {
-//   adult: false,
-//   backdrop_path: "/6yeVcxFR0j08vlv2OlL6zbewm4D.jpg",
-//   budget: 0,
-//   genres: [
-//     { id: 28, name: "Action" },
-//     { id: 878, name: "Science Fiction" },
-//     { id: 53, name: "Thriller" },
-//   ],
-//   homepage: "https://www.netflix.com/title/81768525",
-//   id: 1265609,
-//   imdb_id: "tt15940132",
-//   origin_country: ["AU"],
-//   original_language: "en",
-//   original_title: "War Machine",
-//   overview:
-//     "On one last grueling mission during Army Ranger training, a combat engineer must lead his unit in a fight against a giant otherworldly killing machine.",
-//   popularity: 361.6614,
-//   poster_path: "/tlPgDzwIE7VYYIIAGCTUOnN4wI1.jpg",
-//   production_companies: [
-//     { id: 1632, name: "Lionsgate", origin_country: "US" },
-//     { id: 198785, name: "Hidden Pictures", origin_country: "US" },
-//     { id: 224643, name: "Huge Film", origin_country: "AU" },
-//     { id: 167684, name: "Range Media Partners", origin_country: "US" },
-//   ],
-//   production_countries: [
-//     { iso_3166_1: "AU", name: "Australia" },
-//     { iso_3166_1: "US", name: "United States of America" },
-//   ],
-//   release_date: "2026-02-12",
-//   runtime: 110,
-//   spoken_languages: [{ english_name: "English", iso_639_1: "en", name: "English" }],
-//   status: "Released",
-//   tagline: "All grit. No quit.",
-//   title: "War Machine",
-//   vote_average: 7.26,
-//   vote_count: 999,
-// };
+import { useGetMovieDetailsQuery, useGetMovieVideosQuery } from "@/services/movieApi";
 
 const TMDB_BASE = "https://image.tmdb.org/t/p";
 const staggerContainer = {
@@ -91,98 +51,62 @@ export default function MovieDetail() {
     const [saved, setSaved] = useState(false);
     const [scoreVisible, setScoreVisible] = useState(false);
     const { movieid } = useParams();
-    const [movie, setMovie] = useState(null);
     const [trailerOpen, setTrailerOpen] = useState(false);
-    const [trailerUrl, setTrailerUrl] = useState(null)
     const { user } = UserAuth();
     const router = useRouter();
     const pathname = usePathname();
 
     const { isSaved, toggleSaveMovie } = useSaveMovie(user);
 
+    //Fetchng using rtk query
+    const { data: movie, error: movieError, isLoading: movieLoading } = useGetMovieDetailsQuery(movieid)
 
-    useEffect(() => {
-        if (!movieid) return;
+    //fetching all the videos available
+    const {data, error, isLoading} = useGetMovieVideosQuery(movieid)
 
-        async function fetchData() {
-            try {
-                // console.log("Movie Id:", movieid);
-                const movieData = await fetchMovieDetails(movieid);
-                // console.log("After fetch:", movieData);
-                setMovie(movieData);
-            } catch (err) {
-                console.error("Fetch failed:", err);
+    //Select the trailer from youtube from api response
+    const trailerUrl = useMemo(() => {
+        if (!data?.results) return null;
+
+        const ytVideos = data.results.filter(
+            (video) => video.site === "YouTube"
+        );
+
+        const priority = [
+            { type: "Trailer", official: true },
+            { type: "Trailer" },
+            { type: "Teaser" },
+            { type: "Featurette" },
+            { type: "Clip" },
+        ];
+
+        for (let rule of priority) {
+            const found = ytVideos.find((video) => {
+                if (rule.official !== undefined) {
+                    return (
+                        video.type === rule.type &&
+                        video.official === rule.official
+                    );
+                }
+                return video.type === rule.type;
+            });
+
+            if (found) {
+                return `https://www.youtube.com/embed/${found.key}`;
             }
         }
 
-        fetchData();
-    }, [movieid]);
-
-    //Fetching the videos associated wiht the film
-    useEffect(() => {
-        async function fetchVideos() {
-            try {
-                const movieVideos = await fetchMovieTrailer(movieid);
-                // console.log("After Fetch:", movieVideos);
-
-                if (!movieVideos || !movieVideos.results) {
-                    console.warn("No videos found");
-                    return;
-                }
-
-                // Step 1: Filter YouTube videos
-                const ytVideos = movieVideos.results.filter(
-                    (video) => video.site === "YouTube"
-                );
-
-                // Step 2: Priority logic
-                const getBestVideo = () => {
-                    const priority = [
-                        { type: "Trailer", official: true },
-                        { type: "Trailer" },
-                        { type: "Teaser" },
-                        { type: "Featurette" },
-                        { type: "Clip" },
-                    ];
-
-                    for (let rule of priority) {
-                        const found = ytVideos.find((video) => {
-                            if (rule.official !== undefined) {
-                                return (
-                                    video.type === rule.type &&
-                                    video.official === rule.official
-                                );
-                            }
-                            return video.type === rule.type;
-                        });
-
-                        if (found) return found;
-                    }
-
-                    // fallback → first YouTube video
-                    return ytVideos[0] || null;
-                };
-
-                const bestVideo = getBestVideo();
-
-                if (bestVideo) {
-                    setTrailerUrl(`https://www.youtube.com/embed/${bestVideo.key}`);
-                } else {
-                    console.warn("No suitable video found");
-                }
-            } catch (err) {
-                console.error("Fetch failed:", err);
-            }
-        }
-        fetchVideos()
-    }, [movieid])
+        return ytVideos[0]
+            ? `https://www.youtube.com/embed/${ytVideos[0].key}`
+            : null;
+    }, [data]);
 
     useEffect(() => {
         const t = setTimeout(() => setLoaded(true), 80);
         return () => clearTimeout(t);
     }, []);
 
-    if (!movie) return <div className="flex flex-col items-center justify-center h-screen gap-2">
+    if (movieLoading) return <div className="flex flex-col items-center justify-center h-screen gap-2">
         <LoaderIcon className="animate-spin w-18 h-18 text-blue-500" />
         <p className="text-gray-500 text-sm">Loading movie details...</p>
     </div>
@@ -271,7 +195,7 @@ export default function MovieDetail() {
                                 transition={{ duration: 0.8, delay: 0.1, ease: [0.25, 0.1, 0.25, 1] }}
                                 className="hidden md:block flex-shrink-0"
                             >
-                                <div className="relative w-48 lg:w-56 aspect-[2/3]">
+                                <div className="relative w-48 lg:w-58 aspect-[2/3]">
                                     <Image
                                         src={`${TMDB_BASE}/w500${movie.poster_path}`}
                                         alt={movie.title}
@@ -299,7 +223,7 @@ export default function MovieDetail() {
                                 {/* Title */}
                                 <motion.h1
                                     variants={staggerItem}
-                                    className="text-6xl md:text-7xl lg:text-8xl font-black uppercase leading-none tracking-tight"
+                                    className="text-6xl md:text-7xl lg:text-7xl font-black uppercase leading-none tracking-tight"
                                     style={{ fontFamily: "'Barlow Condensed', sans-serif" }}
                                 >
                                     {movie.title}
