@@ -58,8 +58,8 @@ export const movieApi = createApi({
       query: ({ query, page = 1 }) => ({
         url: 'search/movie',
         params: {
-          api_key: API_KEY,
           query,
+          api_key: API_KEY,
           page,
         },
       }),
@@ -125,7 +125,7 @@ export const {
   useGetTrendingMoviesQuery,
   useGetTopRatedMoviesQuery,
   useGetNowPlayingMoviesQuery,
-  useSearchMoviesQuery,
+  useLazySearchMoviesQuery,
   useGetMovieDetailsQuery,
   useGetSimilarMoviesQuery,
   useGetMovieVideosQuery,

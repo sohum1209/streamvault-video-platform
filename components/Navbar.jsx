@@ -7,6 +7,7 @@ import { motion, AnimatePresence } from "framer-motion";
 import { UserAuth } from "@/context/AuthContext";
 import { LogOut, User, List, Home, Search, X, Menu } from "lucide-react";
 import { useSaveMovie } from "./hook/useSavedMovie";
+import NavSearch from "./ui/NavSearch";
 
 const NAV_LINKS = [
   { label: "Home", href: "/", icon: Home },
@@ -105,14 +106,7 @@ export default function Navbar() {
           {/* Right side */}
           <div className="flex items-center gap-2">
 
-            {/* Search icon */}
-            <motion.button
-              whileHover={{ scale: 1.1 }}
-              whileTap={{ scale: 0.93 }}
-              className="w-9 h-9 rounded-lg flex items-center justify-center text-gray-400 hover:text-white hover:bg-white/8 transition-colors duration-150"
-            >
-              <Search className="w-4 h-4" />
-            </motion.button>
+            <NavSearch/>
 
             {user?.email ? (
               /* User menu */
