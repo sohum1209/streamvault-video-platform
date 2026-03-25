@@ -6,6 +6,7 @@ import { useGetTrendingMoviesQuery, useGetPopularMoviesQuery, useGetTopRatedMovi
 import Main from "@/components/Main";
 import Row from "@/components/Row";
 import { LoaderIcon } from "lucide-react";
+import { useMemo } from "react";
 
 export default function Home() {
 
@@ -15,6 +16,15 @@ export default function Home() {
   // const trendingmovies = await fetchTrending();
 
   const { data: popularmovies, error: popularmoviesError, isLoading: popularLoading } = useGetPopularMoviesQuery();
+
+  const heroMovie = useMemo(() => {
+    if (!popularmovies?.results?.length) return null;
+
+    return popularmovies.results[
+      // eslint-disable-next-line react-hooks/purity
+      Math.floor(Math.random() * popularmovies.results.length)
+    ];
+  }, [popularmovies]);
 
   const { data: topratedmovies, error: topratedmoviesError, isLoading: topRatedLoading } = useGetTopRatedMoviesQuery();
 
@@ -30,7 +40,7 @@ export default function Home() {
 
   return (
     <>
-      <Main></Main>
+      <Main movie={heroMovie}></Main>
       <Row rowId="popular" title="Popular on Netflix" data={popularmovies}></Row>
       <Row rowId="upcoming" title="Upcoming Movies" data={topratedmovies}></Row>
       <Row rowId="trending" title="Trending Now" data={trendingmovies}></Row>

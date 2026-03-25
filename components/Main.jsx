@@ -17,7 +17,7 @@ const truncateString = (str, num) => {
 };
 
 
-function Main() {
+function Main({movie}) {
 
 
   const { user } = UserAuth();
@@ -25,15 +25,7 @@ function Main() {
   const pathname = usePathname();
   const { isSaved, toggleSaveMovie } = useSaveMovie(user);
 
-  const { data, isLoading } = useGetPopularMoviesQuery();
-
-  const movie = useMemo(() => {
-    if (!data?.results?.length) return null;
-
-    return data.results[
-      Math.floor(Math.random() * data.results.length)
-    ];
-  }, [data]);
+  
 
   const handlePlay = () => {
     if (!user) {
