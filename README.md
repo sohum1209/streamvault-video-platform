@@ -55,49 +55,6 @@ streamvault/
 
 ---
 
-## ⚙️ Installation & Setup
-
-### 1️⃣ Clone the repository
-
-```bash
-git clone https://github.com/your-username/streamvault.git
-cd streamvault
-```
-
----
-
-### 2️⃣ Install dependencies
-
-```bash
-npm install
-```
-
----
-
-### 3️⃣ Setup environment variables
-
-Create a `.env.local` file:
-
-```env
-NEXT_PUBLIC_FIREBASE_API_KEY=your_key
-NEXT_PUBLIC_FIREBASE_AUTH_DOMAIN=your_domain
-NEXT_PUBLIC_FIREBASE_PROJECT_ID=your_project_id
-NEXT_PUBLIC_TMDB_API_KEY=your_tmdb_key
-```
-
----
-
-### 4️⃣ Run the app
-
-```bash
-npm run dev
-```
-
-Open:
-👉 http://localhost:3000
-
----
-
 ## 📌 Future Improvements
 
 * 🎬 Video playback support
