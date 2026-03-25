@@ -40,14 +40,7 @@ A Netflix-inspired movie streaming platform built with **Next.js**, featuring se
 ## 📂 Project Structure
 
 ```
-streamvault/
-│── app/
-│── components/
-│── redux/
-│── firebase/
-│── public/
-│── styles/
-│── package.json
+streamvault/ │── app/ # Next.js app router pages │── components/ # Reusable UI components │── context/ # React context (auth, global state) │── lib/ # Utility functions/helpers │── services/ # RTK Query API services │── store/ # Redux store configuration │── public/ # Static assets │── firebase.js # Firebase configuration │── .env.local # Environment variables │── README.md
 ```
 
 ---
