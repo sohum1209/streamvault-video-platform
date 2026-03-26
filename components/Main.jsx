@@ -17,7 +17,7 @@ const truncateString = (str, num) => {
 };
 
 
-function Main({movie}) {
+function Main({ movie }) {
 
 
   const { user } = UserAuth();
@@ -25,7 +25,7 @@ function Main({movie}) {
   const pathname = usePathname();
   const { isSaved, toggleSaveMovie } = useSaveMovie(user);
 
-  
+
 
   const handlePlay = () => {
     if (!user) {
@@ -41,23 +41,25 @@ function Main({movie}) {
   return (
     <div className="relative w-full h-[300px] sm:h-[400px] md:h-[550px]">
       {/* Backdrop */}
-      <Image
-        src={`https://image.tmdb.org/t/p/w1280${movie.backdrop_path}`}
-        alt={movie.title}
-        fill
-        className="object-cover object-top"
-        priority
-      />
+      
+        <Image
+          src={`https://image.tmdb.org/t/p/w1280${movie.backdrop_path}`}
+          alt={movie.title}
+          fill
+          className="object-cover object-top"
+          priority
+        />
+      
 
       {/* Gradient overlay */}
       <div className="absolute inset-0 bg-gradient-to-r from-black/85 via-black/40 to-transparent" />
       <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-transparent to-transparent" />
 
       {/* Content */}
-      <Link href={`/movie/${movie?.id}`} className="absolute inset-0 flex flex-col justify-end p-5 sm:p-8 md:p-12 pb-8 md:pb-12">
-        <h1 className="text-2xl sm:text-3xl md:text-5xl font-bold leading-tight max-w-lg">
+      <div className="absolute inset-0 flex flex-col justify-end p-5 sm:p-8 md:p-12 pb-8 md:pb-12">
+        <Link href={`/movie/${movie?.id}`} className="text-2xl sm:text-3xl md:text-5xl font-bold leading-tight max-w-lg">
           {movie?.title}
-        </h1>
+        </Link>
 
         <p className="text-xs sm:text-sm text-gray-400 mt-2">
           Released: {movie?.release_date}
@@ -75,7 +77,7 @@ function Main({movie}) {
             {!isSaved(movie.id) ? "Watch Later" : "Saved"}
           </button>
         </div>
-      </Link>
+      </div>
     </div>
   );
 }

@@ -58,8 +58,8 @@ export const movieApi = createApi({
       query: ({ query, page = 1 }) => ({
         url: 'search/movie',
         params: {
-          api_key: API_KEY,
           query,
+          api_key: API_KEY,
           page,
         },
       }),
@@ -77,10 +77,11 @@ export const movieApi = createApi({
 
     // 🎭 Similar Movies
     getSimilarMovies: build.query({
-      query: (movieId) => ({
+      query: ({movieId, page=1}) => ({
         url: `movie/${movieId}/similar`,
         params: {
           api_key: API_KEY,
+          page
         },
       }),
     }),
@@ -125,9 +126,10 @@ export const {
   useGetTrendingMoviesQuery,
   useGetTopRatedMoviesQuery,
   useGetNowPlayingMoviesQuery,
-  useSearchMoviesQuery,
+  useLazySearchMoviesQuery,
   useGetMovieDetailsQuery,
   useGetSimilarMoviesQuery,
+  useLazyGetSimilarMoviesQuery,
   useGetMovieVideosQuery,
   useGetMoviesByGenreQuery,
   useGetGenresQuery,
