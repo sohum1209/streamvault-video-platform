@@ -77,10 +77,11 @@ export const movieApi = createApi({
 
     // 🎭 Similar Movies
     getSimilarMovies: build.query({
-      query: (movieId) => ({
+      query: ({movieId, page=1}) => ({
         url: `movie/${movieId}/similar`,
         params: {
           api_key: API_KEY,
+          page
         },
       }),
     }),
@@ -128,6 +129,7 @@ export const {
   useLazySearchMoviesQuery,
   useGetMovieDetailsQuery,
   useGetSimilarMoviesQuery,
+  useLazyGetSimilarMoviesQuery,
   useGetMovieVideosQuery,
   useGetMoviesByGenreQuery,
   useGetGenresQuery,
