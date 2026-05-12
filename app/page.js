@@ -42,7 +42,7 @@ export default function Home() {
   return (
     <>
       <Main movie={heroMovie}></Main>
-      <Row rowId="popular" title="Popular on Netflix" data={popularmovies} category="popular"></Row>
+      <Row rowId="popular" title="Popular" data={popularmovies} category="popular"></Row>
       <Row rowId="upcoming" title="Upcoming Movies" data={upcomingmovies} category="upcoming"></Row>
       <Row rowId="trending" title="Trending Now" data={trendingmovies} category="trending"></Row>
       <Row rowId="top-rated" title="Top Rated Movies" data={topratedmovies} category="top-rated"></Row>
