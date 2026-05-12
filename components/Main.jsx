@@ -39,7 +39,7 @@ function Main({ movie }) {
   if (!movie) return null;
 
   return (
-    <div className="relative w-full h-[300px] sm:h-[400px] md:h-[550px]">
+    <div className="relative w-full h-[350px] sm:h-[400px] md:h-[550px]">
       {/* Backdrop */}
       
         <Image

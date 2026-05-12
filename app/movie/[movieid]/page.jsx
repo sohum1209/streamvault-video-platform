@@ -226,7 +226,7 @@ export default function MovieDetail() {
                                 variants={staggerContainer}
                                 initial="hidden"
                                 animate="show"
-                                className="flex flex-col gap-4 flex-1 pb-2"
+                                className="flex flex-col gap-4 flex-1 pt-20 pb-2"
                             >
                                 {/* Tagline */}
                                 <motion.p
@@ -297,7 +297,7 @@ export default function MovieDetail() {
                                 {/* Buttons */}
                                 <motion.div
                                     variants={staggerItem}
-                                    className="flex flex-wrap items-center gap-3 mt-1"
+                                    className="flex items-center gap-2 sm:gap-3 mt-1"
                                 >
                                     {/* Play Now */}
 
@@ -309,10 +309,10 @@ export default function MovieDetail() {
                                         whileTap={{ scale: 0.97 }}
                                         transition={{ type: "spring", stiffness: 300, damping: 20 }}
                                         onClick={handlePlay}
-                                        className="flex items-center gap-2.5 px-8 py-3.5 rounded-xl font-bold text-white text-sm tracking-wide bg-red-600 hover:bg-red-500 transition-colors duration-200"
+                                        className="flex items-center gap-1 sm:gap-2.5 px-3 sm:px-8 py-3.5 rounded-xl font-bold text-white text-sm tracking-wide bg-red-600 hover:bg-red-500 transition-colors duration-200"
                                     >
-                                        <Play className="w-5 h-5 fill-white" />
-                                        Play Now
+                                        <Play className="w-4 h-4 sm:w-5 sm:h-5 fill-white" />
+                                        <span className="whitespace-nowrap">Play Now</span>
                                     </motion.button>
 
 
@@ -322,10 +322,10 @@ export default function MovieDetail() {
                                         onClick={() => setTrailerOpen(true)}
                                         whileTap={{ scale: 0.97 }}
                                         transition={{ type: "spring", stiffness: 300, damping: 20 }}
-                                        className="flex items-center gap-2.5 px-7 py-3.5 rounded-xl font-semibold text-white text-sm tracking-wide bg-white/10 border border-white/20 hover:bg-white/[0.18] hover:border-white/45 backdrop-blur-sm transition-colors duration-200"
+                                        className="flex items-center gap-1 sm:gap-2.5 px-2.5 sm:px-7 py-3.5 rounded-xl font-semibold text-white text-sm tracking-wide bg-white/10 border border-white/20 hover:bg-white/[0.18] hover:border-white/45 backdrop-blur-sm transition-colors duration-200"
                                     >
-                                        <PlayCircle className="w-5 h-5" />
-                                        Watch Trailer
+                                        <PlayCircle className="w-4 h-4 sm:w-5 sm:h-5" />
+                                        <span className="whitespace-nowrap">Watch Trailer</span>
                                     </motion.button>
 
                                     {/* Wishlist */}
@@ -344,7 +344,7 @@ export default function MovieDetail() {
                                             transition={{ duration: 0.3 }}
                                         >
                                             <Heart
-                                                className="w-5 h-5"
+                                                className="w-4 h-4 sm:w-5 sm:h-5"
                                                 fill={isSaved(movie.id) ? "#e50914" : "none"}
                                                 stroke={isSaved(movie.id) ? "#e50914" : "white"}
                                                 strokeWidth={2}

@@ -1,10 +1,11 @@
 'use client';
-import React, { use } from "react";
+import React from "react";
 import { FaChevronLeft, FaChevronRight } from "react-icons/fa";
+import Link from "next/link";
 
 import Movie from "./Movie";
 
-function Row({ title, data, rowId }) {
+function Row({ title, data, rowId, category }) {
 
   // console.log("Logging: ", data)
   const movies = data?.results;
@@ -24,10 +25,20 @@ function Row({ title, data, rowId }) {
   }
 
   return (
-    <div className="py-3 px-2 ">
+    <div className="py-1.5 sm:py-3 px-2 ">
 
       {/* Title */}
-      <h2 className="font-bold md:text-xl p-4 text-white tracking-wide">{title}</h2>
+      <div className="flex items-center justify-between px-2 py-1 sm:p-4">
+        <h2 className="font-bold md:text-xl text-white tracking-wide">{title}</h2>
+        {category && (
+          <Link
+            href={`/category/${category}`}
+            className="text-xs sm:text-sm font-semibold text-gray-400 hover:text-white transition-colors duration-150"
+          >
+            See more
+          </Link>
+        )}
+      </div>
 
       {/* Slider */}
       <div className="relative flex items-center group">

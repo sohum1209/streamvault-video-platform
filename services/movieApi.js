@@ -42,6 +42,36 @@ export const movieApi = createApi({
       }),
     }),
 
+    getUpcomingMovies: build.query({
+      query: (page = 1) => ({
+        url: 'movie/upcoming',
+        params: {
+          api_key: API_KEY,
+          page,
+        },
+      }),
+    }),
+
+    getCategoryMovies: build.query({
+      query: ({ category, page = 1 }) => {
+        const endpoints = {
+          popular: 'movie/popular',
+          'top-rated': 'movie/top_rated',
+          trending: 'trending/movie/week',
+          upcoming: 'movie/upcoming',
+          'now-playing': 'movie/now_playing',
+        };
+
+        return {
+          url: endpoints[category] || endpoints.popular,
+          params: {
+            api_key: API_KEY,
+            page,
+          },
+        };
+      },
+    }),
+
     // 🎥 Now Playing Movies
     getNowPlayingMovies: build.query({
       query: (page = 1) => ({
@@ -125,6 +155,8 @@ export const {
   useGetPopularMoviesQuery,
   useGetTrendingMoviesQuery,
   useGetTopRatedMoviesQuery,
+  useGetUpcomingMoviesQuery,
+  useLazyGetCategoryMoviesQuery,
   useGetNowPlayingMoviesQuery,
   useLazySearchMoviesQuery,
   useGetMovieDetailsQuery,

@@ -35,7 +35,7 @@ function Movie({ movie }) {
     <Link
       href={`/movie/${movie.id}`}
       key={movie.id ?? index}
-      className="w-40 sm:w-[200px] md:w-60 lg:w-[280px] inline-block cursor-pointer p-2 relative"
+      className="w-40 sm:w-[200px] md:w-60 lg:w-[280px] inline-block cursor-pointer px-1.5 sm:p-2 relative"
     >
       {movie.backdrop_path ? (
         <Image
@@ -43,10 +43,10 @@ function Movie({ movie }) {
           alt={movie.title || movie.name}
           width={280}
           height={160}
-          className="w-full aspect-video object-cover"
+          className="w-full aspect-[3/4] sm:aspect-video object-cover"
         />
       ) : (
-        <div className="w-full aspect-video bg-gray-800 m-auto">
+        <div className="w-full aspect-[3/4] sm:aspect-video bg-gray-800 m-auto">
           <CiImageOn className="text-3xl text-gray-400" />
         </div>
       )}
