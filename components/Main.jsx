@@ -18,14 +18,12 @@ const truncateString = (str, num) => {
 
 
 function Main({ movie }) {
-
-
   const { user } = UserAuth();
   const router = useRouter();
-  const pathname = usePathname();
   const { isSaved, toggleSaveMovie } = useSaveMovie(user);
 
-
+  const releaseYear = movie?.release_date?.slice(0, 4) || "TBA";
+  const score = movie?.vote_average ? movie.vote_average.toFixed(1) : "--";
 
   const handlePlay = () => {
     if (!user) {
@@ -33,52 +31,77 @@ function Main({ movie }) {
       return;
     }
     router.push(`/movie/watch/${movie.id}`);
-  }
-  //   console.log(movie);
+  };
 
   if (!movie) return null;
 
   return (
-    <div className="relative w-full h-[350px] sm:h-[400px] md:h-[550px]">
-      {/* Backdrop */}
-      
-        <Image
-          src={`https://image.tmdb.org/t/p/w1280${movie.backdrop_path}`}
-          alt={movie.title}
-          fill
-          className="object-cover object-top"
-          priority
-        />
-      
+    <section className="relative w-full min-h-[420px] sm:min-h-[500px] md:min-h-[620px] overflow-hidden">
+      <div className="absolute inset-0">
+        {movie.backdrop_path ? (
+          <Image
+            src={`https://image.tmdb.org/t/p/w1280${movie.backdrop_path}`}
+            alt={movie.title || movie.name}
+            fill
+            className="object-cover object-top"
+            priority
+          />
+        ) : (
+          <div className="absolute inset-0 bg-slate-900" />
+        )}
+      </div>
 
-      {/* Gradient overlay */}
-      <div className="absolute inset-0 bg-gradient-to-r from-black/85 via-black/40 to-transparent" />
-      <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-transparent to-transparent" />
+      <div className="absolute inset-0 bg-linear-to-r from-black/95 via-black/40 to-transparent" />
+      <div className="absolute inset-0 bg-linear-to-t from-black/80 via-transparent to-transparent" />
+      <div className="absolute inset-0 bg-[radial-gradient(circle_at_bottom_left,_rgba(255,255,255,0.08),_transparent_28%)]" />
 
-      {/* Content */}
-      <div className="absolute inset-0 flex flex-col justify-end p-5 sm:p-8 md:p-12 pb-8 md:pb-12">
-        <Link href={`/movie/${movie?.id}`} className="text-2xl sm:text-3xl md:text-5xl font-bold leading-tight max-w-lg">
-          {movie?.title}
-        </Link>
+      <div className="absolute bottom-0 mx-auto flex h-full max-w-7xl flex-col justify-end px-4 py-6 sm:px-6 sm:py-8 lg:px-8">
+        <div className="w-full max-w-full sm:max-w-3xl space-y-5 rounded-[2rem] border border-white/10 bg-black/30 p-5 shadow-2xl sm:p-8">
+          <div className="flex flex-wrap items-center gap-3">
+            <span className="rounded-full bg-red-600/95 px-3 py-1 text-[10px] sm:text-xs font-semibold uppercase tracking-[0.28em] text-white shadow-sm">
+              Featured
+            </span>
+            <span className="rounded-full border border-white/10 bg-white/5 px-3 py-1 text-xs text-gray-300">
+              {releaseYear}
+            </span>
+            <span className="rounded-full border border-white/10 bg-white/5 px-3 py-1 text-xs text-gray-300">
+              ⭐ {score}
+            </span>
+          </div>
 
-        <p className="text-xs sm:text-sm text-gray-400 mt-2">
-          Released: {movie?.release_date}
-        </p>
+          <Link href={`/movie/${movie?.id}`} className="block">
+            <h1 className="text-2xl font-black tracking-tight text-white sm:text-3xl md:text-4xl lg:text-5xl">
+              {movie?.title || movie?.name}
+            </h1>
+          </Link>
 
-        <p className="text-sm text-gray-200 mt-2 max-w-sm sm:max-w-md md:max-w-lg leading-relaxed">
-          {truncateString(movie?.overview, 150)}
-        </p>
+          <p className="max-w-2xl text-sm leading-7 text-gray-300 sm:text-base lg:text-lg">
+            {truncateString(movie?.overview || "No description available.", 190)}
+          </p>
 
-        <div className="flex items-center gap-3 mt-4">
-          <button onClick={handlePlay} className="bg-white text-black text-sm font-semibold py-2 px-6 rounded hover:bg-gray-200 transition-colors duration-150">
-            Play
-          </button>
-          <button onClick={() => toggleSaveMovie(movie)} className="border border-white/50 text-white text-sm font-medium py-2 px-6 rounded hover:bg-white/10 transition-colors duration-150">
-            {!isSaved(movie.id) ? "Watch Later" : "Saved"}
-          </button>
+          <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:flex-wrap">
+            <button
+              onClick={handlePlay}
+              className="w-full sm:w-auto inline-flex items-center justify-center rounded-2xl bg-white px-6 py-3 text-sm font-semibold text-black transition duration-200 hover:bg-gray-200 sm:text-base"
+            >
+              Play
+            </button>
+            <Link
+              href={`/movie/${movie?.id}`}
+              className="w-full sm:w-auto inline-flex items-center justify-center rounded-2xl border border-white/20 bg-white/5 px-6 py-3 text-sm font-semibold text-white transition duration-200 hover:border-red-500 hover:bg-white/10 sm:text-base"
+            >
+              More Info
+            </Link>
+            <button
+              onClick={() => toggleSaveMovie(movie)}
+              className="w-full sm:w-auto inline-flex items-center justify-center rounded-2xl border border-white/20 bg-white/5 px-6 py-3 text-sm font-medium text-white transition duration-200 hover:bg-white/10 sm:text-base"
+            >
+              {!isSaved(movie.id) ? "Watch Later" : "Saved"}
+            </button>
+          </div>
         </div>
       </div>
-    </div>
+    </section>
   );
 }
 

@@ -237,7 +237,7 @@ export default function SearchPage() {
                     Discover
                 </p>
                 <h1
-                    className="text-5xl md:text-6xl font-black uppercase leading-none tracking-tight"
+                    className="text-4xl sm:text-5xl md:text-6xl font-black uppercase leading-none tracking-tight"
                     style={{ fontFamily: "'Barlow Condensed', sans-serif" }}
                 >
                     Search
@@ -250,7 +250,7 @@ export default function SearchPage() {
                 initial={{ opacity: 0, y: 12 }}
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ duration: 0.45, delay: 0.1 }}
-                className="flex items-center gap-3 mb-12 max-w-2xl"
+                className="flex flex-col gap-3 mb-12 max-w-2xl sm:flex-row"
             >
                 <div className="flex-1 flex items-center gap-3 bg-white/6 border border-white/12 hover:border-white/22 focus-within:border-red-500/50 focus-within:bg-white/8 rounded-2xl px-4 py-3.5 transition-all duration-200">
                     <Search className="w-4 h-4 text-gray-500 flex-shrink-0" />
@@ -281,7 +281,7 @@ export default function SearchPage() {
                     whileHover={{ scale: 1.04 }}
                     whileTap={{ scale: 0.97 }}
                     transition={{ type: "spring", stiffness: 300, damping: 20 }}
-                    className="px-6 py-3.5 bg-red-600 hover:bg-red-500 text-white text-sm font-bold rounded-2xl tracking-wide transition-colors duration-150 flex-shrink-0"
+                    className="w-full sm:w-auto px-6 py-3.5 bg-red-600 hover:bg-red-500 text-white text-sm font-bold rounded-2xl tracking-wide transition-colors duration-150"
                 >
                     Search
                 </motion.button>

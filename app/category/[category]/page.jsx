@@ -170,8 +170,8 @@ export default function CategoryPage() {
                 className="min-h-screen bg-[#0a0a0a] text-white pt-24 px-6 md:px-14 lg:px-20 pb-20 flex flex-col items-center justify-center text-center"
                 style={{ fontFamily: "'Barlow', 'Helvetica Neue', sans-serif" }}
             >
-                <div className="w-16 h-16 rounded-2xl bg-white/5 border border-white/[0.08] flex items-center justify-center mb-5">
-                    <Film className="w-7 h-7 text-white/[0.15]" />
+                <div className="w-16 h-16 rounded-2xl bg-white/5 border border-white/8 flex items-center justify-center mb-5">
+                    <Film className="w-7 h-7 text-white/15" />
                 </div>
                 <h1 className="text-3xl md:text-5xl font-black uppercase mb-3">Category not found</h1>
                 <p className="text-gray-500 text-sm mb-6">This movie category is not available.</p>
@@ -196,11 +196,11 @@ export default function CategoryPage() {
                 transition={{ duration: 0.5 }}
                 className="mb-10"
             >
-                <p className="text-xs font-semibold uppercase tracking-[0.28em] text-red-500 mb-2">
+                <p className="text-xs sm:text-sm font-semibold uppercase tracking-[0.28em] text-red-500 mb-2">
                     {meta.eyebrow}
                 </p>
                 <h1
-                    className="text-5xl md:text-6xl font-black uppercase leading-none tracking-tight"
+                    className="text-4xl sm:text-5xl md:text-6xl font-black uppercase leading-none tracking-tight"
                     style={{ fontFamily: "'Barlow Condensed', sans-serif" }}
                 >
                     {meta.title}
@@ -227,7 +227,7 @@ export default function CategoryPage() {
                             onClick={() => triggerCategory({ category, page: currentPage })}
                             whileHover={{ scale: 1.04 }}
                             whileTap={{ scale: 0.97 }}
-                            className="mt-2 px-5 py-2.5 rounded-xl bg-white/[0.08] border border-white/[0.12] text-white text-sm font-medium hover:bg-white/[0.12] transition-colors duration-150"
+                            className="mt-2 px-5 py-2.5 rounded-xl bg-white/8 border border-white/12 text-white text-sm font-medium hover:bg-white/12 transition-colors duration-150"
                         >
                             Try again
                         </motion.button>
@@ -283,8 +283,8 @@ export default function CategoryPage() {
                         exit={{ opacity: 0 }}
                         className="flex flex-col items-center justify-center py-28 gap-4 text-center"
                     >
-                        <div className="w-16 h-16 rounded-2xl bg-white/5 border border-white/[0.08] flex items-center justify-center mb-2">
-                            <Film className="w-7 h-7 text-white/[0.15]" />
+                        <div className="w-16 h-16 rounded-2xl bg-white/5 border border-white/8 flex items-center justify-center mb-2">
+                            <Film className="w-7 h-7 text-white/15" />
                         </div>
                         <p className="text-gray-400 text-base font-medium">{meta.empty}</p>
                         <p className="text-gray-600 text-sm max-w-xs">Try another category from the home page</p>

@@ -66,7 +66,7 @@ export default function NavSearch() {
               animate={{ width: 220, opacity: 1 }}
               exit={{ width: 0, opacity: 0 }}
               transition={{ duration: 0.3, ease: [0.25, 0.1, 0.25, 1] }}
-              className="overflow-hidden"
+              className="overflow-hidden max-w-[min(75vw,220px)]"
             >
               <div className="flex items-center gap-2 bg-white/8 border border-white/15 rounded-xl px-3 py-2 mr-2">
                 <input

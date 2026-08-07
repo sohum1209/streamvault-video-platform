@@ -2,7 +2,7 @@
 
 import { useEffect, useRef, useState } from "react";
 import Hls from "hls.js";
-import { Play, Pause, Volume2, VolumeX, Maximize, RotateCcw } from "lucide-react";
+import { Play, Pause, Volume2, VolumeX, Maximize, Minimize,RotateCcw } from "lucide-react";
 import { motion, AnimatePresence } from "framer-motion";
 
 // Public domain HLS stream — swap with your own later
@@ -15,6 +15,7 @@ export default function VideoPlayer({ movie }) {
 
   const [playing, setPlaying] = useState(false);
   const [muted, setMuted] = useState(false);
+  const [fullscreen, setFullscreen] = useState(false);
   const [progress, setProgress] = useState(0);
   const [duration, setDuration] = useState(0);
   const [showControls, setShowControls] = useState(true);
@@ -76,7 +77,15 @@ export default function VideoPlayer({ movie }) {
     videoRef.current.currentTime = ratio * duration;
   };
 
-  const fullscreen = () => containerRef.current?.requestFullscreen();
+  const toggleFullscreen = () => {
+    if (!document.fullscreenElement) {
+      containerRef.current?.requestFullscreen();
+      setFullscreen(true);
+    } else {
+      document.exitFullscreen();
+      setFullscreen(false);
+    }
+  };
 
   const fmt = (s) => {
     const m = Math.floor(s / 60).toString().padStart(2, "0");
@@ -173,8 +182,8 @@ export default function VideoPlayer({ movie }) {
                 >
                   <RotateCcw className="w-4 h-4" />
                 </button>
-                <button onClick={fullscreen} className="text-white hover:text-red-400 transition-colors">
-                  <Maximize className="w-4 h-4" />
+                <button onClick={toggleFullscreen} className="text-white hover:text-red-400 transition-colors">
+                  {fullscreen ? <Minimize className="w-4 h-4" /> : <Maximize className="w-4 h-4" />}
                 </button>
               </div>
             </div>

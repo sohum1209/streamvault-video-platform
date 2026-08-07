@@ -6,6 +6,7 @@ import Navbar from "@/components/Navbar";
 import { AuthContextProvider } from "@/context/AuthContext";
 import { Provider } from "react-redux";
 import { store } from "@/store/store";
+import { ToastProvider } from "@/components/ui/toast";
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -25,8 +26,10 @@ export default function RootLayout({ children }) {
       >
         <AuthContextProvider>
           <Provider store={store}>
-            <Navbar />
-            {children}
+            <ToastProvider>
+              <Navbar />
+              {children}
+            </ToastProvider>
           </Provider>
         </AuthContextProvider>
       </body>

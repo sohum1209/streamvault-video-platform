@@ -192,21 +192,21 @@ export default function MovieDetail() {
 
 
                     {/* Gradient overlays */}
-                    <div className="absolute inset-0 bg-gradient-to-r from-[#0a0a0a]/95 via-[#0a0a0a]/55 to-transparent" />
-                    <div className="absolute inset-0 bg-gradient-to-t from-[#0a0a0a] via-[#0a0a0a]/15 to-transparent" />
+                    <div className="absolute inset-0 bg-linear-to-r from-[#0a0a0a]/95 via-[#0a0a0a]/55 to-transparent" />
+                    <div className="absolute inset-0 bg-linear-to-t from-[#0a0a0a] via-[#0a0a0a]/15 to-transparent" />
 
                     {/* Content */}
-                    <div className="relative z-10 flex items-end h-full min-h-screen pb-16 px-8 md:px-16 max-w-7xl mx-auto">
-                        <div className="flex flex-col md:flex-row gap-10 md:gap-14 items-start md:items-end w-full">
+                    <div className="relative z-10 flex items-end h-full min-h-screen pb-16 px-4 sm:px-6 md:px-16 max-w-7xl mx-auto">
+                        <div className="flex flex-col md:flex-row gap-8 md:gap-14 items-start md:items-end w-full">
 
                             {/* Poster */}
                             <motion.div
                                 initial={{ opacity: 0, y: 32, scale: 0.96 }}
                                 animate={{ opacity: 1, y: 0, scale: 1 }}
                                 transition={{ duration: 0.8, delay: 0.1, ease: [0.25, 0.1, 0.25, 1] }}
-                                className="hidden md:block flex-shrink-0"
+                                className="hidden md:block shrink-0"
                             >
-                                <div className="relative w-48 lg:w-58 aspect-[2/3]">
+                                <div className="relative w-48 lg:w-58 aspect-2/3">
                                     {movie?.poster_path ? (<Image
                                         src={`${TMDB_BASE}/w500${movie.poster_path}`}
                                         alt={movie.title}
@@ -239,7 +239,7 @@ export default function MovieDetail() {
                                 {/* Title */}
                                 <motion.h1
                                     variants={staggerItem}
-                                    className="text-6xl md:text-7xl lg:text-7xl font-black uppercase leading-none tracking-tight"
+                                    className="text-4xl sm:text-5xl md:text-6xl lg:text-7xl font-black uppercase leading-none tracking-tight"
                                     style={{ fontFamily: "'Barlow Condensed', sans-serif" }}
                                 >
                                     {movie.title}
@@ -335,8 +335,8 @@ export default function MovieDetail() {
                                         whileTap={{ scale: 0.93 }}
                                         transition={{ type: "spring", stiffness: 400, damping: 18 }}
                                         className={`w-12 h-12 rounded-xl flex items-center justify-center border transition-colors duration-200 ${isSaved(movie.id)
-                                            ? "border-red-500/50 bg-red-500/[0.12]"
-                                            : "border-white/15 bg-white/[0.06] hover:bg-white/[0.12]"
+                                            ? "border-red-500/50 bg-red-500/12"
+                                            : "border-white/15 bg-white/6 hover:bg-white/12"
                                             }`}
                                     >
                                         <motion.div
@@ -456,12 +456,12 @@ export default function MovieDetail() {
                                         {scorePercent}%
                                     </motion.span>
                                 </div>
-                                <div className="w-full h-1.5 rounded-full bg-white/[0.08] overflow-hidden">
+                                <div className="w-full h-1.5 rounded-full bg-white/8 overflow-hidden">
                                     <motion.div
                                         initial={{ width: 0 }}
                                         animate={{ width: scoreVisible ? `${scorePercent}%` : "0%" }}
                                         transition={{ duration: 1.2, ease: [0.4, 0, 0.2, 1], delay: 0.7 }}
-                                        className="h-full rounded-full bg-gradient-to-r from-red-600 to-orange-400"
+                                        className="h-full rounded-full bg-linear-to-r from-red-600 to-orange-400"
                                     />
                                 </div>
                             </div>
@@ -492,14 +492,14 @@ export default function MovieDetail() {
                             style={{ scrollbarWidth: "none" }}
                         >
                             {similarMovies.results.map((movie) => (
-                                <div key={movie?.id} className="flex-shrink-0 w-60">
+                                <div key={movie?.id} className="shrink-0 w-60">
                                     <MovieCard movie={movie} />
                                 </div>
                             ))}
 
                             <Link
                                 href={`/movie/${movie?.id}/similar?q=${movie?.title}`}
-                                className="group relative flex-shrink-0 w-60 h-full min-h-[136px] rounded-xl overflow-hidden border border-white/10 bg-white/5 hover:bg-white/10 hover:border-white/20 transition-all duration-300 flex flex-col items-center justify-center gap-3 cursor-pointer"
+                                className="group relative shrink-0 w-60 h-full min-h-[136px] rounded-xl overflow-hidden border border-white/10 bg-white/5 hover:bg-white/10 hover:border-white/20 transition-all duration-300 flex flex-col items-center justify-center gap-3 cursor-pointer"
                             >
                                 {/* Animated circle */}
                                 <div className="w-14 h-14 rounded-full border border-white/20 bg-white/5 flex items-center justify-center group-hover:scale-110 group-hover:border-red-500/50 group-hover:bg-red-500/10 transition-all duration-300">

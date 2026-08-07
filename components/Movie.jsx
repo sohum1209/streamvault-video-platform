@@ -10,32 +10,27 @@ import { CiImageOn } from "react-icons/ci";
 
 function Movie({ movie }) {
   const [like, setLike] = useState(false);
-  const [saved, setSaved] = useState(false);
   const { user } = UserAuth();
 
-  const movieId = doc(db, "users", `${user?.email}`);
+  const movieRef = doc(db, "users", `${user?.email}`);
 
   const saveMovie = async () => {
     if (user?.email) {
-      setLike(!like);
-      setSaved(true);
-      await updateDoc(movieId, {
+      setLike((prev) => !prev);
+      await updateDoc(movieRef, {
         savedShows: arrayUnion({
           id: movie.id,
-          title: movie.title,
+          title: movie.title || movie.name,
           backdrop_path: movie.backdrop_path,
-        })
-      })
-    } else {
-      alert("Please Login to save the movies.")
+        }),
+      });
     }
-  }
+  };
 
   return (
     <Link
       href={`/movie/${movie.id}`}
-      key={movie.id ?? index}
-      className="w-40 sm:w-[200px] md:w-60 lg:w-[280px] inline-block cursor-pointer px-1.5 sm:p-2 relative"
+      className="group relative inline-block min-w-[9rem] w-36 sm:w-44 md:w-52 lg:w-60 cursor-pointer px-1.5 sm:p-2"
     >
       {movie.backdrop_path ? (
         <Image
@@ -43,41 +38,34 @@ function Movie({ movie }) {
           alt={movie.title || movie.name}
           width={280}
           height={160}
-          className="w-full aspect-[3/4] sm:aspect-video object-cover"
+          className="w-full aspect-3/4 sm:aspect-video rounded-3xl object-cover transition-transform duration-300 group-hover:scale-105"
         />
       ) : (
-        <div className="w-full aspect-[3/4] sm:aspect-video bg-gray-800 m-auto">
+        <div className="w-full aspect-3/4 sm:aspect-video rounded-3xl bg-gray-800 flex items-center justify-center">
           <CiImageOn className="text-3xl text-gray-400" />
         </div>
       )}
 
-      {/* Overlay — uses hover: on itself, not group-hover */}
-      <div className="absolute inset-0 bg-black/75 opacity-0 hover:opacity-100 transition-opacity duration-300 flex flex-col justify-end p-3">
-        <p className="text-white text-xs md:text-sm font-semibold line-clamp-2 leading-snug">
+      <div className="pointer-events-none absolute inset-0 rounded-3xl bg-black/0 transition duration-300 group-hover:bg-black/50" />
+      <div className="pointer-events-none absolute inset-x-0 bottom-0 rounded-b-3xl bg-linear-to-t from-black/90 to-transparent px-3 pb-3 pt-16 opacity-0 transition duration-300 group-hover:opacity-100">
+        <p className="text-xs sm:text-sm font-semibold text-white line-clamp-2">
           {movie.title || movie.name}
         </p>
         {movie.vote_average && (
-          <p className="text-yellow-400 text-xs mt-1">
-            ★ {movie.vote_average.toFixed(1)}
-          </p>
+          <p className="mt-2 text-xs text-yellow-400">★ {movie.vote_average.toFixed(1)}</p>
         )}
-
-        {/* Wishlist button inside overlay so it appears together */}
-        <button
-          onClick={(e) => {
-            e.preventDefault();
-            e.stopPropagation();
-            saveMovie();
-          }}
-          className="absolute top-2 right-2 p-1.5 rounded-full bg-black/50 hover:bg-black/80 transition-colors duration-200"
-        >
-          {like ? (
-            <FaHeart className="text-red-500 text-sm" />
-          ) : (
-            <FaRegHeart className="text-white text-sm" />
-          )}
-        </button>
       </div>
+
+      <button
+        onClick={(e) => {
+          e.preventDefault();
+          e.stopPropagation();
+          saveMovie();
+        }}
+        className="absolute right-3 top-3 z-10 rounded-full bg-black/60 p-2 text-white transition duration-200 hover:bg-black/80"
+      >
+        {like ? <FaHeart className="text-red-500" /> : <FaRegHeart className="text-white" />}
+      </button>
     </Link>
   );
 }

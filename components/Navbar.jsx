@@ -5,6 +5,7 @@ import React, { useState, useEffect } from "react";
 import { usePathname } from "next/navigation";
 import { motion, AnimatePresence } from "framer-motion";
 import { UserAuth } from "@/context/AuthContext";
+import { useToast } from "@/components/ui/toast";
 import { LogOut, User, List, Home, Search, X, Menu } from "lucide-react";
 import { useSaveMovie } from "./hook/useSavedMovie";
 import NavSearch from "./ui/NavSearch";
@@ -20,7 +21,13 @@ export default function Navbar() {
   const [scrolled, setScrolled] = useState(false);
   const [mobileOpen, setMobileOpen] = useState(false);
   const [userMenuOpen, setUserMenuOpen] = useState(false);
+  const [logoutLoading, setLogoutLoading] = useState(false);
   const { displayName } = useSaveMovie(user);
+  const { toast } = useToast();
+
+  const myListHref = user?.email
+    ? "/my-list"
+    : "/login?callbackUrl=" + encodeURIComponent("/my-list");
 
   // Scroll background
   useEffect(() => {
@@ -36,11 +43,25 @@ export default function Navbar() {
   }, [pathname]);
 
   const handleLogout = async () => {
+    setLogoutLoading(true);
+
     try {
       await logOutuser();
+      toast({
+        title: "Signed out",
+        description: "You have successfully logged out.",
+        variant: "default",
+      });
       setUserMenuOpen(false);
     } catch (error) {
       console.log(error);
+      toast({
+        title: "Logout failed",
+        description: error?.message || "Unable to sign out. Please try again.",
+        variant: "destructive",
+      });
+    } finally {
+      setLogoutLoading(false);
     }
   };
 
@@ -57,14 +78,14 @@ export default function Navbar() {
         className={`fixed top-0 left-0 right-0 z-50 transition-all duration-300 ${
           scrolled
             ? "bg-[#0a0a0a]/95 backdrop-blur-md  border-white/6 shadow-xl"
-            : "bg-gradient-to-b from-black/80 to-transparent"
+            : "bg-linear-to-b from-black/80 to-transparent"
         }`}
         style={{ fontFamily: "'Barlow', 'Helvetica Neue', sans-serif" }}
       >
-        <div className="w-full mx-auto px-6 md:px-10 h-16 flex items-center justify-between gap-6">
+        <div className="w-full max-w-[1440px] mx-auto px-4 sm:px-6 md:px-8 h-16 min-h-16 flex items-center justify-between gap-2 sm:gap-3 md:gap-4 lg:gap-6">
 
           {/* Logo */}
-          <Link href="/" className="flex-shrink-0">
+          <Link href="/" className="shrink-0">
             <motion.h1
               whileHover={{ scale: 1.04 }}
               whileTap={{ scale: 0.97 }}
@@ -79,8 +100,9 @@ export default function Navbar() {
           <div className="hidden md:flex items-center gap-1 flex-1">
             {NAV_LINKS.map(({ label, href, icon: Icon }) => {
               const active = pathname === href;
+              const linkHref = href === "/my-list" && !user?.email ? myListHref : href;
               return (
-                <Link key={href} href={href}>
+                <Link key={href} href={linkHref}>
                   <motion.span
                     whileHover={{ color: "#ffffff" }}
                     className={`flex relative items-center gap-1.5 px-3 py-1.5 rounded-lg text-sm font-medium transition-colors duration-150 ${
@@ -106,7 +128,9 @@ export default function Navbar() {
           {/* Right side */}
           <div className="flex items-center gap-2">
 
-            <NavSearch/>
+            <div className="min-w-0">
+              <NavSearch />
+            </div>
 
             {user?.email ? (
               /* User menu */
@@ -159,7 +183,7 @@ export default function Navbar() {
                             </motion.div>
                           </Link> */}
 
-                          <Link href="/my-list">
+                          <Link href={myListHref}>
                             <motion.div
                               whileHover={{ backgroundColor: "rgba(255,255,255,0.06)" }}
                               className="flex items-center gap-2.5 px-3 py-2.5 rounded-lg cursor-pointer transition-colors duration-150"
@@ -175,12 +199,18 @@ export default function Navbar() {
                           <motion.button
                             onClick={handleLogout}
                             whileHover={{ backgroundColor: "rgba(229,9,20,0.12)" }}
-                            className="w-full flex items-center gap-2.5 px-3 py-2.5 rounded-lg transition-colors duration-150 group"
+                            disabled={logoutLoading}
+                            className="w-full flex items-center justify-between gap-2.5 px-3 py-2.5 rounded-lg transition-all duration-150 group disabled:cursor-not-allowed disabled:opacity-70"
                           >
-                            <LogOut className="w-4 h-4 text-gray-500 group-hover:text-red-400 transition-colors" />
-                            <span className="text-sm text-gray-400 group-hover:text-red-400 transition-colors">
-                              Log Out
-                            </span>
+                            <div className="flex items-center gap-2">
+                              <LogOut className="w-4 h-4 text-gray-500 group-hover:text-red-400 transition-colors" />
+                              <span className="text-sm text-gray-400 group-hover:text-red-400 transition-colors">
+                                {logoutLoading ? "Signing out..." : "Log Out"}
+                              </span>
+                            </div>
+                            {logoutLoading && (
+                              <span className="inline-block h-4 w-4 animate-spin rounded-full border-2 border-white/25 border-t-white" />
+                            )}
                           </motion.button>
                         </div>
                       </motion.div>
@@ -237,8 +267,9 @@ export default function Navbar() {
             <div className="px-6 py-4 flex flex-col gap-1">
               {NAV_LINKS.map(({ label, href, icon: Icon }) => {
                 const active = pathname === href;
+                const linkHref = href === "/my-list" && !user?.email ? myListHref : href;
                 return (
-                  <Link key={href} href={href}>
+                  <Link key={href} href={linkHref}>
                     <motion.div
                       whileHover={{ x: 4 }}
                       className={`flex items-center gap-3 px-3 py-3 rounded-xl text-sm font-medium transition-colors duration-150 ${

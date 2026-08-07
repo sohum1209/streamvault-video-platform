@@ -3,6 +3,7 @@
 import { motion } from "framer-motion";
 import Image from "next/image";
 import Link from "next/link";
+import { useRouter } from "next/navigation";
 import { Trash2, Film } from "lucide-react";
 import { UserAuth } from "@/context/AuthContext";
 import { db } from "@/firebase";
@@ -59,7 +60,7 @@ function MovieCard({ movie, onRemove }) {
           )}
 
           {/* Hover overlay */}
-          <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/20 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
+          <div className="absolute inset-0 bg-linear-to-t from-black/80 via-black/20 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
 
           {/* Play hint */}
           <div className="absolute inset-0 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity duration-300">
@@ -99,7 +100,8 @@ export default function MyListPage() {
   // const movies = PLACEHOLDER_MOVIES;
 
   const [movies, setMovies] = useState(null);
-  const { user } = UserAuth()
+  const { user, authLoading } = UserAuth();
+  const router = useRouter();
 
   const handleRemove = async(id) => {
     // wire up your Firestore remove logic here
@@ -115,14 +117,37 @@ export default function MyListPage() {
   };
 
   useEffect(() => {
-    onSnapshot(doc(db, 'users', `${user?.email}`), (doc) => {
-      setMovies(doc.data()?.savedShows)
-    })
-  }, [user?.email])
+    if (!user?.email) {
+      return;
+    }
+
+    const unsubscribe = onSnapshot(doc(db, 'users', `${user.email}`), (doc) => {
+      setMovies(doc.data()?.savedShows);
+    });
+
+    return () => unsubscribe();
+  }, [user?.email]);
+
+  useEffect(() => {
+    if (!authLoading && !user?.email) {
+      router.replace(`/login?callbackUrl=${encodeURIComponent("/my-list")}`);
+    }
+  }, [authLoading, user?.email, router]);
+
+  if (authLoading || !user?.email) {
+    return (
+      <div className="min-h-screen flex items-center justify-center bg-[#0a0a0a] text-white px-6 md:px-14 lg:px-20">
+        <div className="rounded-3xl border border-white/10 bg-black/80 px-8 py-14 text-center shadow-2xl backdrop-blur-xl">
+          <p className="text-lg font-semibold mb-2">Checking your account…</p>
+          <p className="text-sm text-gray-400">Redirecting to login if you are not signed in.</p>
+        </div>
+      </div>
+    );
+  }
 
   return (
     <div
-      className="min-h-screen bg-[#0a0a0a] text-white px-6 md:px-14 lg:px-20 py-24"
+      className="min-h-screen bg-[#0a0a0a] text-white px-4 sm:px-6 md:px-14 lg:px-20 py-16 sm:py-20"
       style={{ fontFamily: "'Barlow', 'Helvetica Neue', sans-serif" }}
     >
       {/* Header */}
@@ -130,14 +155,14 @@ export default function MyListPage() {
         initial={{ opacity: 0, y: 16 }}
         animate={{ opacity: 1, y: 0 }}
         transition={{ duration: 0.5 }}
-        className="mb-10 flex items-end justify-between"
+        className="mb-10 flex flex-col gap-4 md:flex-row md:items-end md:justify-between"
       >
         <div>
           {/* <p className="text-xs font-semibold uppercase tracking-[0.28em] text-red-500 mb-2">
             Your Collection
           </p> */}
           <h1
-            className="text-5xl md:text-6xl font-black uppercase leading-none tracking-tight"
+            className="text-4xl sm:text-5xl md:text-6xl font-black uppercase leading-none tracking-tight"
             style={{ fontFamily: "'Barlow Condensed', sans-serif" }}
           >
             My List
@@ -156,7 +181,7 @@ export default function MyListPage() {
         initial={{ scaleX: 0 }}
         animate={{ scaleX: 1 }}
         transition={{ duration: 0.6, ease: [0.25, 0.1, 0.25, 1] }}
-        className="origin-left h-px bg-gradient-to-r from-red-500/60 via-white/10 to-transparent mb-10"
+        className="origin-left h-px bg-linear-to-r from-red-500/60 via-white/10 to-transparent mb-10"
       />
 
       {/* Empty state */}

@@ -6,8 +6,6 @@ import Link from "next/link";
 import Movie from "./Movie";
 
 function Row({ title, data, rowId, category }) {
-
-  // console.log("Logging: ", data)
   const movies = data?.results;
 
   if (!movies?.length) {
@@ -15,21 +13,19 @@ function Row({ title, data, rowId, category }) {
   }
 
   const slideleft = () => {
-    let slider = document.getElementById("slider" + rowId);
-    slider.scrollLeft = slider.scrollLeft - 500;
-  }
+    const slider = document.getElementById("slider" + rowId);
+    slider?.scrollBy({ left: -520, behavior: "smooth" });
+  };
 
   const slideright = () => {
-    let slider = document.getElementById("slider" + rowId);
-    slider.scrollLeft = slider.scrollLeft + 500;
-  }
+    const slider = document.getElementById("slider" + rowId);
+    slider?.scrollBy({ left: 520, behavior: "smooth" });
+  };
 
   return (
-    <div className="py-1.5 sm:py-3 px-2 ">
-
-      {/* Title */}
-      <div className="flex items-center justify-between px-2 py-1 sm:p-4">
-        <h2 className="font-bold md:text-xl text-white tracking-wide">{title}</h2>
+    <section className="py-3 sm:py-5 px-3 sm:px-4">
+      <div className="flex flex-col gap-3 md:flex-row md:items-center md:justify-between px-2 sm:px-0">
+        <h2 className="font-bold text-lg sm:text-xl md:text-2xl text-white tracking-wide">{title}</h2>
         {category && (
           <Link
             href={`/category/${category}`}
@@ -40,55 +36,40 @@ function Row({ title, data, rowId, category }) {
         )}
       </div>
 
-      {/* Slider */}
-      <div className="relative flex items-center group">
-
-        {/* Right gradient overlay + arrow */}
+      <div className="relative mt-3 flex items-center">
         <div
-          className="absolute left top-0 h-full w-24 z-10
-    flex items-center justify-center
-    bg-gradient-to-l from-transparent to-black/60
-    opacity-0 group-hover:opacity-100
-    transition-all duration-300
-    pointer-events-none"
+          className="absolute left-0 top-0 z-10 hidden h-full w-16 items-center justify-center bg-linear-to-r from-black/90 to-transparent opacity-0 transition-all duration-300 md:flex"
         >
           <FaChevronLeft
             onClick={slideleft}
-            size={28}
-            className="text-white drop-shadow-lg cursor-pointer
-      pointer-events-auto  hover:scale-110 transition-transform duration-200"
+            size={26}
+            className="text-white drop-shadow-lg cursor-pointer hover:scale-110 transition-transform duration-200"
           />
         </div>
 
-        {/* Movie strip */}
         <div
           id={"slider" + rowId}
-          className="w-full h-full overflow-x-scroll whitespace-nowrap scroll-smooth px-1"
+          className="w-full overflow-x-auto scroll-smooth whitespace-nowrap px-1 pb-2 pt-1 snap-x snap-mandatory touch-pan-x overflow-y-hidden"
           style={{ scrollbarWidth: "none" }}
         >
-          {movies.map((movie, index) => (
-            <Movie key={movie.id ?? index} movie={movie} />
+          {movies.map((movie) => (
+            <div key={movie.id} className="inline-block snap-center px-1">
+              <Movie movie={movie} />
+            </div>
           ))}
         </div>
 
-        {/* Right gradient overlay + arrow */}
         <div
-          className="absolute right-0 top-0 h-full w-24 z-10
-    flex items-center justify-center
-    bg-gradient-to-r from-transparent to-black/60
-    opacity-0 group-hover:opacity-100
-    transition-all duration-300
-    pointer-events-none"
+          className="absolute right-0 top-0 z-10 hidden h-full w-16 items-center justify-center bg-linear-to-l from-black/90 to-transparent opacity-0 transition-all duration-300 md:flex"
         >
           <FaChevronRight
             onClick={slideright}
-            size={28}
-            className="text-white drop-shadow-lg cursor-pointer
-      pointer-events-auto  hover:scale-110 transition-transform duration-200"
+            size={26}
+            className="text-white drop-shadow-lg cursor-pointer hover:scale-110 transition-transform duration-200"
           />
         </div>
       </div>
-    </div>
+    </section>
   );
 }
 

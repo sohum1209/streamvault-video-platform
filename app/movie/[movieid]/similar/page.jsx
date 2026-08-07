@@ -154,7 +154,7 @@ export default function SimilarMovies() {
                     Similar to
                 </p>
                 <h1
-                    className="text-5xl md:text-6xl font-black uppercase leading-none tracking-tight"
+                    className="text-4xl sm:text-5xl md:text-6xl font-black uppercase leading-none tracking-tight"
                     style={{ fontFamily: "'Barlow Condensed', sans-serif" }}
                 >
                     {title}
@@ -182,7 +182,7 @@ export default function SimilarMovies() {
                             onClick={() => triggerSearch({ movieid, page: currentPage })}
                             whileHover={{ scale: 1.04 }}
                             whileTap={{ scale: 0.97 }}
-                            className="mt-2 px-5 py-2.5 rounded-xl bg-white/[0.08] border border-white/[0.12] text-white text-sm font-medium hover:bg-white/[0.12] transition-colors duration-150"
+                            className="mt-2 px-5 py-2.5 rounded-xl bg-white/8 border border-white/12 text-white text-sm font-medium hover:bg-white/12 transition-colors duration-150"
                         >
                             Try again
                         </motion.button>
@@ -239,7 +239,7 @@ export default function SimilarMovies() {
                         exit={{ opacity: 0 }}
                         className="flex flex-col items-center justify-center py-28 gap-4 text-center"
                     >
-                        <div className="w-16 h-16 rounded-2xl bg-white/5 border border-white/[0.08] flex items-center justify-center mb-2">
+                        <div className="w-16 h-16 rounded-2xl bg-white/5 border border-white/8 flex items-center justify-center mb-2">
                             <Film className="w-7 h-7 text-white/[0.15]" />
                         </div>
                         <p className="text-gray-400 text-base font-medium">No results</p>
