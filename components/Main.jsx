@@ -36,7 +36,7 @@ function Main({ movie }) {
   if (!movie) return null;
 
   return (
-    <section className="relative w-full min-h-[420px] sm:min-h-[500px] md:min-h-[620px] overflow-hidden">
+    <section className="relative w-full min-h-[540px] md:min-h-[620px] overflow-hidden">
       <div className="absolute inset-0">
         {movie.backdrop_path ? (
           <Image
@@ -80,18 +80,20 @@ function Main({ movie }) {
           </p>
 
           <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:flex-wrap">
-            <button
-              onClick={handlePlay}
-              className="w-full sm:w-auto inline-flex items-center justify-center rounded-2xl bg-white px-6 py-3 text-sm font-semibold text-black transition duration-200 hover:bg-gray-200 sm:text-base"
-            >
-              Play
-            </button>
-            <Link
-              href={`/movie/${movie?.id}`}
-              className="w-full sm:w-auto inline-flex items-center justify-center rounded-2xl border border-white/20 bg-white/5 px-6 py-3 text-sm font-semibold text-white transition duration-200 hover:border-red-500 hover:bg-white/10 sm:text-base"
-            >
-              More Info
-            </Link>
+            <div className="flex gap-3 sm:contents">
+              <button
+                onClick={handlePlay}
+                className="flex-1 sm:flex-none sm:w-auto inline-flex items-center justify-center rounded-2xl bg-white px-6 py-3 text-sm font-semibold text-black transition duration-200 hover:bg-gray-200 sm:text-base"
+              >
+                Play
+              </button>
+              <Link
+                href={`/movie/${movie?.id}`}
+                className="flex-1 sm:flex-none sm:w-auto inline-flex items-center justify-center rounded-2xl border border-white/20 bg-white/5 px-6 py-3 text-sm font-semibold text-white transition duration-200 hover:border-red-500 hover:bg-white/10 sm:text-base"
+              >
+                More Info
+              </Link>
+            </div>
             <button
               onClick={() => toggleSaveMovie(movie)}
               className="w-full sm:w-auto inline-flex items-center justify-center rounded-2xl border border-white/20 bg-white/5 px-6 py-3 text-sm font-medium text-white transition duration-200 hover:bg-white/10 sm:text-base"
