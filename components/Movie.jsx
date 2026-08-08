@@ -38,16 +38,16 @@ function Movie({ movie }) {
           alt={movie.title || movie.name}
           width={280}
           height={160}
-          className="w-full aspect-3/4 sm:aspect-video rounded-3xl object-cover transition-transform duration-300 group-hover:scale-105"
+          className="w-full hidden md:block aspect-video rounded-3xl object-cover transition-transform duration-300 group-hover:scale-105"
         />
       ) : (
-        <div className="w-full aspect-3/4 sm:aspect-video rounded-3xl bg-gray-800 flex items-center justify-center">
+        <div className="w-full hidden md:block aspect-video rounded-3xl bg-gray-800 flex items-center justify-center">
           <CiImageOn className="text-3xl text-gray-400" />
         </div>
       )}
 
-      <div className="pointer-events-none absolute inset-0 rounded-3xl bg-black/0 transition duration-300 group-hover:bg-black/50" />
-      <div className="pointer-events-none absolute inset-x-0 bottom-0 rounded-b-3xl bg-linear-to-t from-black/90 to-transparent px-3 pb-3 pt-16 opacity-0 transition duration-300 group-hover:opacity-100">
+      <div className="hidden md:block pointer-events-none absolute inset-0 rounded-3xl bg-black/0 transition duration-300 group-hover:bg-black/50" />
+      <div className="hidden md:block pointer-events-none absolute inset-x-0 bottom-0 rounded-b-3xl bg-linear-to-t from-black/90 to-transparent px-3 pb-3 pt-16 opacity-0 transition duration-300 group-hover:opacity-100">
         <p className="text-xs sm:text-sm font-semibold text-white line-clamp-2">
           {movie.title || movie.name}
         </p>
@@ -55,6 +55,20 @@ function Movie({ movie }) {
           <p className="mt-2 text-xs text-yellow-400">★ {movie.vote_average.toFixed(1)}</p>
         )}
       </div>
+
+      {movie.poster_path ? (
+        <Image
+          src={`https://image.tmdb.org/t/p/w500${movie.poster_path}`}
+          alt={movie.title || movie.name}
+          width={280}
+          height={160}
+          className="w-full md:hidden aspect-3/4 rounded-3xl object-cover transition-transform duration-300 group-hover:scale-105"
+        />
+      ) : (
+        <div className="w-full md:hidden aspect-3/4 rounded-3xl bg-gray-800 flex items-center justify-center">
+          <CiImageOn className="text-3xl text-gray-400" />
+        </div>
+      )}
 
       <button
         onClick={(e) => {

@@ -64,12 +64,14 @@ export default function MovieDetail() {
 
     //Fetchng using rtk query
     const { data: movie, error: movieError, isLoading: movieLoading } = useGetMovieDetailsQuery(movieid)
+    // console.log(movie)
 
     //fetching all the videos available
     const { data, error, isLoading } = useGetMovieVideosQuery(movieid)
 
     //fetching similar movies
     const { data: similarMovies, isLoading: similarMovieLoading } = useGetSimilarMoviesQuery({ movieId: movieid });
+    // console.log("Similar Movies: ", similarMovies)
 
     //Select the trailer from youtube from api response
     const trailerUrl = useMemo(() => {
@@ -113,7 +115,7 @@ export default function MovieDetail() {
         return () => clearTimeout(t);
     }, []);
 
-    console.log(similarMovies)
+    // console.log(similarMovies)
 
     if (movieLoading || similarMovieLoading) return <div className="flex flex-col items-center justify-center h-screen gap-2">
         <LoaderIcon className="animate-spin w-18 h-18 text-blue-500" />
@@ -178,14 +180,31 @@ export default function MovieDetail() {
             >
                 {/* ── Hero ── */}
                 <div className="relative w-full" style={{ minHeight: "92vh" }}>
-                    {movie?.backdrop_path ? (<motion.img
-                        src={`${TMDB_BASE}/original${movie.backdrop_path}`}
-                        alt=""
-                        initial={{ opacity: 0, scale: 1.04 }}
-                        animate={{ opacity: 1, scale: 1 }}
-                        transition={{ duration: 1.2, ease: "easeOut" }}
-                        className="absolute inset-0 w-full h-full object-cover object-top brightness-[0.45]"
-                    />) : (
+                    {movie?.backdrop_path || movie?.poster_path ? (
+                        <>
+                            {movie?.backdrop_path ? (
+                                <motion.img
+                                    src={`${TMDB_BASE}/original${movie.backdrop_path}`}
+                                    alt=""
+                                    initial={{ opacity: 0, scale: 1.04 }}
+                                    animate={{ opacity: 1, scale: 1 }}
+                                    transition={{ duration: 1.2, ease: "easeOut" }}
+                                    className="absolute inset-0 w-full h-full object-cover object-top brightness-[0.45] hidden md:block"
+                                />
+                            ) : null}
+
+                            {movie?.poster_path ? (
+                                <motion.img
+                                    src={`${TMDB_BASE}/w500${movie.poster_path}`}
+                                    alt=""
+                                    initial={{ opacity: 0, scale: 1.04 }}
+                                    animate={{ opacity: 1, scale: 1 }}
+                                    transition={{ duration: 1.2, ease: "easeOut" }}
+                                    className="absolute inset-0 w-full h-full object-cover object-center brightness-[0.45] md:hidden"
+                                />
+                            ) : null}
+                        </>
+                    ) : (
                         <div className="w-full h-full absolute inset-0 bg-linear-to-bl from-gray-800 via-gray-600 to-gray-400"></div>
                     )}
                     {/* Backdrop */}
@@ -196,7 +215,7 @@ export default function MovieDetail() {
                     <div className="absolute inset-0 bg-linear-to-t from-[#0a0a0a] via-[#0a0a0a]/15 to-transparent" />
 
                     {/* Content */}
-                    <div className="relative z-10 flex items-end h-full min-h-screen pb-16 px-4 sm:px-6 md:px-16 max-w-7xl mx-auto">
+                    <div className="relative z-10 flex items-end h-full min-h-screen pb-2.5 md:pb-16 px-6 md:px-16 max-w-7xl mx-auto">
                         <div className="flex flex-col md:flex-row gap-8 md:gap-14 items-start md:items-end w-full">
 
                             {/* Poster */}
@@ -471,7 +490,7 @@ export default function MovieDetail() {
                 </div>
 
                 {/* -- Similar Movies -- */}
-                <div className="max-w-7xl mx-auto px-8 md:px-16">
+                {similarMovies?.total_results && (<div className="max-w-7xl mx-auto px-8 md:px-16">
                     <h2 className="flex items-center gap-2 text-xs font-bold tracking-[0.22em] uppercase text-red-500 mb-4">
                         <Film className="w-3.5 h-3.5" /> Similar Movies
                     </h2>
@@ -526,7 +545,7 @@ export default function MovieDetail() {
                             <ChevronRight className="w-5 h-5" />
                         </button>
                     </div>
-                </div>
+                </div>)}
             </div>
             <Dialog open={trailerOpen} onOpenChange={setTrailerOpen}>
                 <DialogContent className="max-w-6xl w-full bg-[#111] border border-white/10 p-0 overflow-hidden rounded-2xl">
