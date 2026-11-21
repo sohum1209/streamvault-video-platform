@@ -37,6 +37,13 @@ A Netflix-inspired movie streaming platform built with **Next.js**, featuring Fi
 
 ---
 
+## TMDB API key
+
+Set `TMDB_API_KEY` in `.env.local` for local development and as a server-side
+environment variable in production. Do not use the `NEXT_PUBLIC_` prefix.
+Browser requests go through the restricted `/api/tmdb/*` route, which adds the
+key when it calls TMDB.
+
 ## 📂 Project Structure
 
 ```

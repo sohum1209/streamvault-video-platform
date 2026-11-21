@@ -1,11 +1,9 @@
 import { createApi, fetchBaseQuery } from '@reduxjs/toolkit/query/react';
 
-const API_KEY = process.env.NEXT_PUBLIC_API_KEY;
-
 export const movieApi = createApi({
   reducerPath: 'movieApi',
   baseQuery: fetchBaseQuery({
-    baseUrl: 'https://api.themoviedb.org/3/',
+    baseUrl: '/api/tmdb/',
   }),
 
   endpoints: (build) => ({
@@ -15,7 +13,6 @@ export const movieApi = createApi({
       query: (page = 1) => ({
         url: 'movie/popular',
         params: {
-          api_key: API_KEY,
           page,
         },
       }),
@@ -25,9 +22,6 @@ export const movieApi = createApi({
     getTrendingMovies: build.query({
       query: () => ({
         url: 'trending/movie/week',
-        params: {
-          api_key: API_KEY,
-        },
       }),
     }),
 
@@ -36,7 +30,6 @@ export const movieApi = createApi({
       query: (page = 1) => ({
         url: 'movie/top_rated',
         params: {
-          api_key: API_KEY,
           page,
         },
       }),
@@ -46,7 +39,6 @@ export const movieApi = createApi({
       query: (page = 1) => ({
         url: 'movie/upcoming',
         params: {
-          api_key: API_KEY,
           page,
         },
       }),
@@ -65,7 +57,6 @@ export const movieApi = createApi({
         return {
           url: endpoints[category] || endpoints.popular,
           params: {
-            api_key: API_KEY,
             page,
           },
         };
@@ -77,7 +68,6 @@ export const movieApi = createApi({
       query: (page = 1) => ({
         url: 'movie/now_playing',
         params: {
-          api_key: API_KEY,
           page,
         },
       }),
@@ -89,7 +79,6 @@ export const movieApi = createApi({
         url: 'search/movie',
         params: {
           query,
-          api_key: API_KEY,
           page,
         },
       }),
@@ -99,9 +88,6 @@ export const movieApi = createApi({
     getMovieDetails: build.query({
       query: (movieId) => ({
         url: `movie/${movieId}`,
-        params: {
-          api_key: API_KEY,
-        },
       }),
     }),
 
@@ -110,7 +96,6 @@ export const movieApi = createApi({
       query: ({movieId, page=1}) => ({
         url: `movie/${movieId}/similar`,
         params: {
-          api_key: API_KEY,
           page
         },
       }),
@@ -120,9 +105,6 @@ export const movieApi = createApi({
     getMovieVideos: build.query({
       query: (movieId) => ({
         url: `movie/${movieId}/videos`,
-        params: {
-          api_key: API_KEY,
-        },
       }),
     }),
 
@@ -131,7 +113,6 @@ export const movieApi = createApi({
       query: ({ genreId, page = 1 }) => ({
         url: 'discover/movie',
         params: {
-          api_key: API_KEY,
           with_genres: genreId,
           page,
         },
@@ -142,9 +123,6 @@ export const movieApi = createApi({
     getGenres: build.query({
       query: () => ({
         url: 'genre/movie/list',
-        params: {
-          api_key: API_KEY,
-        },
       }),
     }),
 
