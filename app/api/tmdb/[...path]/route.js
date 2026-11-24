@@ -53,6 +53,8 @@ export async function GET(request, { params }) {
     return NextResponse.json({ error: "Page must be between 1 and 500." }, { status: 400 });
   }
 
+  // console.log(`Fetching TMDB data from: ${upstreamUrl.toString()}`);
+
   try {
     const upstream = await fetch(upstreamUrl, { cache: "no-store" });
     return new Response(await upstream.text(), {

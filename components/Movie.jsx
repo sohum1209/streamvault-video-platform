@@ -12,12 +12,10 @@ function Movie({ movie }) {
   const [like, setLike] = useState(false);
   const { user } = UserAuth();
 
-  const movieRef = doc(db, "users", `${user?.email}`);
-
   const saveMovie = async () => {
-    if (user?.email) {
+    if (user?.uid) {
       setLike((prev) => !prev);
-      await updateDoc(movieRef, {
+      await updateDoc(doc(db, "users", user.uid), {
         savedShows: arrayUnion({
           id: movie.id,
           title: movie.title || movie.name,

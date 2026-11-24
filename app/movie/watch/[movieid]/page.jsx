@@ -4,18 +4,27 @@ import VideoPlayer from "@/components/VideoPlayer";
 import { LoaderIcon } from "lucide-react";
 import { useGetMovieDetailsQuery } from "@/services/movieApi";
 import { useParams } from "next/navigation";
+import FailureScene from "@/components/FailureScene";
 export default function WatchPage() {
     const { movieid } = useParams();
 
-    const { data:movie, isLoading } = useGetMovieDetailsQuery(movieid);
+    const { data: movie, isLoading, isError, refetch } = useGetMovieDetailsQuery(movieid);
 
     if (isLoading) return <div className="flex flex-col items-center justify-center h-screen gap-2">
         <LoaderIcon className="animate-spin w-18 h-18 text-blue-500" />
         <p className="text-gray-500 text-sm">Loading movie details...</p>
     </div>
 
-    if (!movie) {
-        return <div className="text-white">Movie not found 😢</div>;
+    if (isError || !movie) {
+        return (
+            <FailureScene
+                title={isError ? "We couldn't load this movie" : "Movie not found"}
+                message={isError
+                    ? "We couldn't retrieve this movie's details. Please try again."
+                    : "We couldn't find the movie you're looking for."}
+                onRetry={isError ? refetch : undefined}
+            />
+        );
     }
 
     return (

@@ -25,10 +25,10 @@ export function AuthContextProvider({ children }) {
       console.log("userCredential: ", userCredential);
 
       await sendEmailVerification(userCredential.user, {
-        url: "http://localhost:3000/login"
+        url: "https://mellow-truffle-809505.netlify.app/login"
       });
 
-      await setDoc(doc(db, 'users', email), {
+      await setDoc(doc(db, "users", userCredential.user.uid), {
         name,
         phone,
         savedShows: []

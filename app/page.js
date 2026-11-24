@@ -6,6 +6,7 @@ import Main from "@/components/Main";
 import Row from "@/components/Row";
 import { LoaderIcon } from "lucide-react";
 import { useMemo } from "react";
+import FailureScene from "@/components/FailureScene";
 
 export default function Home() {
 
@@ -14,7 +15,7 @@ export default function Home() {
   // const upcomingmovies = await fetchUpcoming();
   // const trendingmovies = await fetchTrending();
 
-  const { data: popularmovies, isLoading: popularLoading } = useGetPopularMoviesQuery();
+  const { data: popularmovies, isLoading: popularLoading, isError: popularError, refetch: refetchPopular } = useGetPopularMoviesQuery();
 
   const heroMovie = useMemo(() => {
     if (!popularmovies?.results?.length) return null;
@@ -25,12 +26,25 @@ export default function Home() {
     ];
   }, [popularmovies]);
 
-  const { data: topratedmovies, isLoading: topRatedLoading } = useGetTopRatedMoviesQuery();
+  const { data: topratedmovies, isLoading: topRatedLoading, isError: topRatedError, refetch: refetchTopRated } = useGetTopRatedMoviesQuery();
 
-  const { data: trendingmovies, isLoading: trendingLoading } = useGetTrendingMoviesQuery();
+  const { data: trendingmovies, isLoading: trendingLoading, isError: trendingError, refetch: refetchTrending } = useGetTrendingMoviesQuery();
 
-  const { data: upcomingmovies, isLoading: upcomingLoading } = useGetUpcomingMoviesQuery();
+  const { data: upcomingmovies, isLoading: upcomingLoading, isError: upcomingError, refetch: refetchUpcoming } = useGetUpcomingMoviesQuery();
   // console.log(popularmovies)
+
+  if (popularError || topRatedError || trendingError || upcomingError) {
+    return (
+      <FailureScene
+        onRetry={() => {
+          refetchPopular();
+          refetchTopRated();
+          refetchTrending();
+          refetchUpcoming();
+        }}
+      />
+    );
+  }
 
   if (popularLoading || topRatedLoading || trendingLoading || upcomingLoading) {
     return <div className="flex flex-col items-center justify-center h-screen gap-2">

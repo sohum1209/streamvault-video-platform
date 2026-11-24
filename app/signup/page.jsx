@@ -94,7 +94,7 @@ function SignUp() {
 
   return (
     <div className="relative w-full min-h-screen overflow-hidden bg-black">
-      <Image src="/bannerimage.jpg" fill alt="banner-img" className="object-cover" />
+      <Image src="/banner_img.png" fill alt="banner-img" className="object-cover" />
       <div className="absolute inset-0 bg-black/75" />
 
       <div className="relative z-20 flex min-h-screen items-center justify-center px-4 py-10">

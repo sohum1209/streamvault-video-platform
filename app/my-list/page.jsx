@@ -9,6 +9,7 @@ import { UserAuth } from "@/context/AuthContext";
 import { db } from "@/firebase";
 import { updateDoc, doc, onSnapshot } from "firebase/firestore"
 import { useEffect, useState } from "react";
+import FailureScene from "@/components/FailureScene";
 
 const TMDB_BASE = "https://image.tmdb.org/t/p";
 
@@ -99,13 +100,18 @@ export default function MyListPage() {
   // ── Swap PLACEHOLDER_MOVIES with your Firestore data here ──
   // const movies = PLACEHOLDER_MOVIES;
 
-  const [movies, setMovies] = useState(null);
+  const [listState, setListState] = useState({ uid: null, movies: null, hasError: false });
+  const [retryCount, setRetryCount] = useState(0);
   const { user, authLoading } = UserAuth();
   const router = useRouter();
+  const uid = user?.uid ?? null;
+  const isCurrentList = listState.uid === uid;
+  const movies = isCurrentList ? listState.movies : null;
+  const hasListError = isCurrentList && listState.hasError;
 
   const handleRemove = async(id) => {
     // wire up your Firestore remove logic here
-    const moviesRef = doc(db, 'users', `${user?.email}`);
+    const moviesRef = doc(db, "users", uid);
     try {
       const result = movies.filter((mov) => mov.id !== id);
       await updateDoc(moviesRef, {
@@ -117,24 +123,35 @@ export default function MyListPage() {
   };
 
   useEffect(() => {
-    if (!user?.email) {
+    if (!uid) {
       return;
     }
 
-    const unsubscribe = onSnapshot(doc(db, 'users', `${user.email}`), (doc) => {
-      setMovies(doc.data()?.savedShows);
-    });
+    const unsubscribe = onSnapshot(
+      doc(db, "users", uid),
+      (snapshot) => {
+        setListState({
+          uid,
+          movies: snapshot.data()?.savedShows ?? [],
+          hasError: false,
+        });
+      },
+      (error) => {
+        console.error("My list listener error:", error.code);
+        setListState({ uid, movies: null, hasError: true });
+      }
+    );
 
     return () => unsubscribe();
-  }, [user?.email]);
+  }, [uid, retryCount]);
 
   useEffect(() => {
-    if (!authLoading && !user?.email) {
+    if (!authLoading && !uid) {
       router.replace(`/login?callbackUrl=${encodeURIComponent("/my-list")}`);
     }
-  }, [authLoading, user?.email, router]);
+  }, [authLoading, uid, router]);
 
-  if (authLoading || !user?.email) {
+  if (authLoading || !uid) {
     return (
       <div className="min-h-screen flex items-center justify-center bg-[#0a0a0a] text-white px-6 md:px-14 lg:px-20">
         <div className="rounded-3xl border border-white/10 bg-black/80 px-8 py-14 text-center shadow-2xl backdrop-blur-xl">
@@ -142,6 +159,16 @@ export default function MyListPage() {
           <p className="text-sm text-gray-400">Redirecting to login if you are not signed in.</p>
         </div>
       </div>
+    );
+  }
+
+  if (hasListError) {
+    return (
+      <FailureScene
+        title="Unable to load your list"
+        message="We couldn't access your saved movies. Please try again."
+        onRetry={() => setRetryCount((count) => count + 1)}
+      />
     );
   }
 

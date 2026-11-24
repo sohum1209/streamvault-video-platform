@@ -7,6 +7,7 @@ import { motion } from "framer-motion";
 import { UserAuth } from "@/context/AuthContext";
 import { useToast } from "@/components/ui/toast";
 import { useRouter } from "next/navigation";
+import { getSafeCallbackUrl } from "@/lib/safeRedirect";
 
 function LoginForm({ callbackUrl }) {
   const { LoginUser } = UserAuth();
@@ -29,9 +30,9 @@ function LoginForm({ callbackUrl }) {
         description: "Redirecting you to the requested page.",
         variant: "success",
       });
-      router.push(callbackUrl);
+      router.push(getSafeCallbackUrl(callbackUrl));
     } catch (error) {
-      const message = error?.message || "Login failed. Please check your credentials.";
+      const message = "Login failed. Please check your credentials.";
       console.log("Error Encountered: ", error);
       setError(message);
       toast({
@@ -46,7 +47,7 @@ function LoginForm({ callbackUrl }) {
 
   return (
     <div className="relative w-full min-h-screen overflow-hidden bg-black">
-      <Image src="/bannerimage.jpg" fill alt="banner-img" className="object-cover" />
+      <Image src="/banner_img.png" fill alt="banner-img" className="object-cover" />
       <div className="absolute inset-0 bg-black/75" />
 
       <div className="relative z-20 flex min-h-screen items-center justify-center px-4 py-10">

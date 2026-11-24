@@ -1,9 +1,10 @@
 import React from "react";
 import LoginForm from "./LoginForm";
+import { getSafeCallbackUrl } from "@/lib/safeRedirect";
 
 export default async function LoginPage({ searchParams }) {
   const params = await searchParams;
-  const callbackUrl = params?.callbackUrl || "/";
+  const callbackUrl = getSafeCallbackUrl(params?.callbackUrl);
 
   return (
     <React.Suspense fallback={<div>Loading login form...</div>}>

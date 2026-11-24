@@ -10,12 +10,12 @@ import {
     X,
     Film,
     Star,
-    AlertCircle,
     ChevronLeft,
     ChevronRight,
 } from "lucide-react";
 import { useLazySearchMoviesQuery } from "@/services/movieApi";
 import MovieCard from "./MovieCard";
+import FailureScene from "./FailureScene";
 
 
 // ─────────────────────────────────────────────────────────────────────────────
@@ -310,24 +310,10 @@ export default function SearchPage() {
                         exit={{ opacity: 0 }}
                         className="flex flex-col items-center justify-center py-28 gap-4 text-center"
                     >
-                        <div className="w-16 h-16 rounded-2xl bg-red-500/10 border border-red-500/20 flex items-center justify-center mb-2">
-                            <AlertCircle className="w-7 h-7 text-red-500/60" />
-                        </div>
-                        <p className="text-gray-400 text-base font-medium">
-                            Something went wrong
-                        </p>
-                        <p className="text-gray-600 text-sm">
-                            Please try again in a moment
-                        </p>
-                        {/* Retry button re-triggers the same search */}
-                        <motion.button
-                            onClick={() => triggerSearch({ query: initialQuery, page: currentPage })}
-                            whileHover={{ scale: 1.04 }}
-                            whileTap={{ scale: 0.97 }}
-                            className="mt-2 px-5 py-2.5 rounded-xl bg-white/8 border border-white/12 text-white text-sm font-medium hover:bg-white/12 transition-colors duration-150"
-                        >
-                            Try again
-                        </motion.button>
+                        <FailureScene
+                            compact
+                            onRetry={() => triggerSearch({ query: initialQuery, page: currentPage })}
+                        />
                     </motion.div>
                 )}
 

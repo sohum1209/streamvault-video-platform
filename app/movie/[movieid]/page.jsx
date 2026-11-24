@@ -30,6 +30,7 @@ import { useSaveMovie } from "@/components/hook/useSavedMovie"
 import { useGetMovieDetailsQuery, useGetMovieVideosQuery, useGetSimilarMoviesQuery } from "@/services/movieApi";
 import MovieCard from "@/components/MovieCard";
 import { FaSearchPlus } from "react-icons/fa";
+import FailureScene from "@/components/FailureScene";
 
 const TMDB_BASE = "https://image.tmdb.org/t/p";
 const staggerContainer = {
@@ -63,7 +64,12 @@ export default function MovieDetail() {
     const { isSaved, toggleSaveMovie } = useSaveMovie(user);
 
     //Fetchng using rtk query
-    const { data: movie, error: movieError, isLoading: movieLoading } = useGetMovieDetailsQuery(movieid)
+    const {
+        data: movie,
+        error: movieError,
+        isLoading: movieLoading,
+        refetch: refetchMovie,
+    } = useGetMovieDetailsQuery(movieid)
     // console.log(movie)
 
     //fetching all the videos available
@@ -117,10 +123,28 @@ export default function MovieDetail() {
 
     // console.log(similarMovies)
 
+    if (movieError) {
+        return (
+            <FailureScene
+                message="We couldn't retrieve this movie's details. Please try again."
+                onRetry={refetchMovie}
+            />
+        );
+    }
+
     if (movieLoading || similarMovieLoading) return <div className="flex flex-col items-center justify-center h-screen gap-2">
         <LoaderIcon className="animate-spin w-18 h-18 text-blue-500" />
         <p className="text-gray-500 text-sm">Loading movie details...</p>
     </div>
+
+    if (!movie) {
+        return (
+            <FailureScene
+                title="Movie not found"
+                message="We couldn't find the movie you're looking for."
+            />
+        );
+    }
 
     const year = new Date(movie.release_date).getFullYear();
     const hrs = Math.floor(movie.runtime / 60);
